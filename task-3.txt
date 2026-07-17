@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quiz Game Application</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:linear-gradient(135deg,#141E30,#243B55);
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+}
+
+.container{
+width:450px;
+background:#fff;
+padding:30px;
+border-radius:15px;
+box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+
+h1{
+text-align:center;
+margin-bottom:20px;
+color:#333;
+}
+
+#question{
+font-size:22px;
+margin-bottom:20px;
+}
+
+.btn{
+width:100%;
+padding:12px;
+margin:8px 0;
+border:none;
+border-radius:8px;
+background:#eaeaea;
+cursor:pointer;
+font-size:17px;
+transition:.3s;
+}
+
+.btn:hover{
+background:#2196f3;
+color:#fff;
+}
+
+.correct{
+background:#4CAF50!important;
+color:#fff;
+}
+
+.wrong{
+background:#F44336!important;
+color:#fff;
+}
+
+#nextBtn{
+width:100%;
+padding:12px;
+margin-top:20px;
+background:#2196f3;
+color:#fff;
+border:none;
+border-radius:8px;
+display:none;
+cursor:pointer;
+font-size:18px;
+}
+
+#score{
+margin-top:20px;
+text-align:center;
+font-weight:bold;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>🎯 Online Quiz Game</h1>
+
+<h2 id="question"></h2>
+
+<div id="answers"></div>
+
+<button id="nextBtn">Next</button>
+
+<p id="score"></p>
+
+</div>
+
+<script>
+
+const quiz=[
+
+{
+question:"Which language is used to style webpages?",
+answers:[
+{text:"HTML",correct:false},
+{text:"CSS",correct:true},
+{text:"Python",correct:false},
+{text:"Java",correct:false}
+]
+},
+
+{
+question:"Which language adds interactivity?",
+answers:[
+{text:"JavaScript",correct:true},
+{text:"CSS",correct:false},
+{text:"HTML",correct:false},
+{text:"C",correct:false}
+]
+},
+
+{
+question:"HTML stands for?",
+answers:[
+{text:"Hyper Text Markup Language",correct:true},
+{text:"High Text Machine Language",correct:false},
+{text:"Home Tool Markup Language",correct:false},
+{text:"None",correct:false}
+]
+},
+
+{
+question:"Which symbol is used for comments in JavaScript?",
+answers:[
+{text:"//",correct:true},
+{text:"<!-- -->",correct:false},
+{text:"#",correct:false},
+{text:"**",correct:false}
+]
+},
+
+{
+question:"Which company developed JavaScript?",
+answers:[
+{text:"Netscape",correct:true},
+{text:"Microsoft",correct:false},
+{text:"Google",correct:false},
+{text:"Apple",correct:false}
+]
+}
+
+];
+
+let current=0;
+let marks=0;
+
+const question=document.getElementById("question");
+const answers=document.getElementById("answers");
+const nextBtn=document.getElementById("nextBtn");
+const score=document.getElementById("score");
+
+function loadQuestion(){
+
+answers.innerHTML="";
+nextBtn.style.display="none";
+
+question.innerHTML=(current+1)+". "+quiz[current].question;
+
+quiz[current].answers.forEach(answer=>{
+
+let btn=document.createElement("button");
+
+btn.innerHTML=answer.text;
+
+btn.classList.add("btn");
+
+btn.onclick=()=>selectAnswer(btn,answer.correct);
+
+answers.appendChild(btn);
+
+});
+
+}
+
+function selectAnswer(button,correct){
+
+Array.from(answers.children).forEach(btn=>btn.disabled=true);
+
+if(correct){
+button.classList.add("correct");
+marks++;
+}else{
+button.classList.add("wrong");
+}
+
+Array.from(answers.children).forEach((btn,index)=>{
+if(quiz[current].answers[index].correct){
+btn.classList.add("correct");
+}
+});
+
+nextBtn.style.display="block";
+}
+
+nextBtn.onclick=function(){
+
+current++;
+
+if(current<quiz.length){
+loadQuestion();
+}else{
+showResult();
+}
+
+}
+
+function showResult(){
+
+question.innerHTML="🎉 Quiz Completed!";
+
+answers.innerHTML="";
+
+score.innerHTML="Your Score : "+marks+" / "+quiz.length;
+
+nextBtn.innerHTML="Restart";
+
+nextBtn.style.display="block";
+
+nextBtn.onclick=function(){
+
+current=0;
+marks=0;
+score.innerHTML="";
+nextBtn.innerHTML="Next";
+loadQuestion();
+
+}
+
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
